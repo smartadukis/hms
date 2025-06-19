@@ -1,0 +1,45 @@
+/* Custom CSS for HMS */
+html,
+body {
+    height: 100%;
+    background-color: #f4f7f9; /* Light Ash */
+}
+
+.btn-aqua {
+    background-color: #00ffff;
+    color: #000;
+}
+.btn-aqua:hover {
+    background-color: #00cccc;
+}
+
+/* Centered form container */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card styling */
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar */
+.sidebar {
+    background: #2c3e50;
+}
+.sidebar a {
+    color: #bdc3c7;
+}
+.sidebar a.active {
+    background: #17a2b8; /* Bootstrap info */
+    color: #fff;
+}
