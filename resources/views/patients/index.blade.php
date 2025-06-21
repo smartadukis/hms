@@ -2,11 +2,41 @@
     <div class="container">
         <h2 class="text-info mb-4">Patients List</h2>
 
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+
+            <a href="{{ route('patients.create') }}" class="btn btn-md btn-info px-4 mb-2 mb-md-0 me-5">
+                + New Patient
+            </a>
+
+            <form id="filterForm" method="GET" class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
+                <input type="text" name="search" id="searchInput" placeholder="Search..." class="form-control" value="{{ request('search') }}">
+
+                <select name="gender" id="genderSelect" class="form-select">
+                    <option value="">All Genders</option>
+                    <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                    <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                </select>
+
+                @php $role = auth()->user()->role; @endphp
+
+                @if($role === 'admin')
+                <select name="creator" id="creatorSelect" class="form-select">
+                    <option value="">All Creators</option>
+                    @foreach($creators as $creator)
+                        <option value="{{ $creator->id }}" {{ (string)request('creator') === (string)$creator->id ? 'selected' : '' }}>
+                            {{ $creator->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @endif
+
+                <button type="submit" class="btn btn-info">Filter</button>
+            </form>
+        </div>
+
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-
-        <a href="{{ route('patients.create') }}" class="btn btn-info mb-3">+ New Patient</a>
 
         <table class="table table-bordered table-striped">
             <thead class="table-light">
@@ -46,4 +76,36 @@
 
         {{ $patients->links() }}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('filterForm');
+            const searchInput = document.getElementById('searchInput');
+            const genderSelect = document.getElementById('genderSelect');
+            const creatorSelect = document.getElementById('creatorSelect');
+
+            
+            genderSelect.addEventListener('change', function () {
+                filterForm.submit();
+            });
+
+            creatorSelect.addEventListener('change', function () {
+                filterForm.submit();
+            });
+
+            let searchTimeout;
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    filterForm.submit();
+                }, 500); 
+            });
+
+         
+            searchInput.addEventListener('change', function() { 
+                 clearTimeout(searchTimeout); 
+                 filterForm.submit();
+            });
+        });
+    </script>
 </x-layout>

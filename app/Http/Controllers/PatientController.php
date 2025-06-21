@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,11 +10,29 @@ use Illuminate\Support\Facades\Auth;
 class PatientController extends Controller
 {
 
-    public function index()
+   public function index(Request $request)
     {
-        $patients = Patient::with('creator')->latest()->paginate(25);
-        return view('patients.index', compact('patients'));
+        $query = Patient::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+
+        if ($request->filled('creator')) {
+            $query->where('created_by', $request->creator);
+        }
+
+        $patients = $query->with('creator')->latest()->paginate(25)->withQueryString();
+        $creators = User::select('id', 'name')->get();
+
+        return view('patients.index', compact('patients', 'creators'));
     }
+
 
 
     public function create()
