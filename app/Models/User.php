@@ -45,4 +45,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+   // const ROLES = ['admin', 'doctor', 'nurse', 'staff'];
+
+
+    // Role based helper methods
+    public function isRole($role)
+    {
+        return $this->role === $role;
+    }
+
+
 }
