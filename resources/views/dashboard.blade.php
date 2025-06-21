@@ -141,6 +141,11 @@
                 <a href="{{ route('admin.settings') }}">Settings</a>
             @endif
 
+            @if(in_array($role, ['admin', 'receptionist']))
+                <a href="{{ route('patients.index') }}">Manage Patients</a>
+            @endif
+
+
             @if($role === 'doctor')
                 <a href="{{ route('doctor.patients') }}">My Patients</a>
                 <a href="#">Prescriptions</a>

@@ -2,18 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PatientController;
+
+/******************************************************************************************
+ * Basic Routes
+ ****************************************************************************************** */
 
 // Redirect root to dashboard
 
@@ -28,6 +22,11 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
+
+/******************************************************************************************
+ * Dashboard Routes
+ ******************************************************************************************/
+// This section contains routes that are shared across different user roles.
 
  // Shared dashboard
 Route::middleware(['auth'])->group(function () {
@@ -78,9 +77,15 @@ Route::middleware(['auth'])->group(function () {
 
     // Patient
     Route::middleware('role:patient')->group(function () {
-        Route::get('/patient/records', fn() => view('patient.records'))->name('patient.records');
+        Route::get('/patients/records', fn() => view('patients.records'))->name('patients.records');
     });
 });
 
+/******************************************************************************************
+ * Patient Routes
+ ****************************************************************************************** */
 
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('patients', PatientController::class);
+});
