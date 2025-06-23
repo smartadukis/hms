@@ -139,15 +139,20 @@
             @if($role === 'admin')
                 <a href="{{ route('admin.users') }}">Manage Users</a>
                 <a href="{{ route('admin.settings') }}">Settings</a>
+                <a href="{{ route('patients.index') }}">Manage Patients</a>
+                <a href="{{ route('appointments.index') }}">Manage Appointments</a>
+                
             @endif
 
-            @if(in_array($role, ['admin', 'receptionist']))
+            <!-- @if(in_array($role, ['admin', 'receptionist']))
                 <a href="{{ route('patients.index') }}">Manage Patients</a>
-            @endif
+                <a href="{{ route('appointments.index') }}">Manage Appointments</a>
+            @endif -->
 
 
             @if($role === 'doctor')
                 <a href="{{ route('doctor.patients') }}">My Patients</a>
+                <a href="{{ route('doctor.appointments') }}">My Appointments</a>
                 <a href="#">Prescriptions</a>
                 <a href="#">Lab Requests</a>
             @endif
@@ -158,8 +163,8 @@
             @endif
 
             @if($role === 'receptionist')
-                <a href="{{ route('receptionist.register') }}">Register Patients</a>
-                <a href="#">Manage Appointments</a>
+                <a href="{{ route('patients.index') }}">Manage Patients</a>
+                <a href="{{ route('appointments.index') }}">Manage Appointments</a>
             @endif
 
             @if($role === 'lab_staff')

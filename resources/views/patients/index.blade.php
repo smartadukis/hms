@@ -4,7 +4,7 @@
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
 
-            <a href="{{ route('patients.create') }}" class="btn btn-md btn-info px-4 mb-2 mb-md-0 me-5">
+            <a href="{{ route('patients.create') }}" class="btn btn-md btn-info px-4 mb-2 mb-md-0 me-5" data-bs-toggle="modal" data-bs-target="#addPatientModal">
                 + New Patient
             </a>
 
@@ -59,7 +59,7 @@
                         <td>{{ $patient->creator->name ?? 'N/A' }}</td>
                         <td>
                             <a href="{{ route('patients.edit', $patient) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('patients.destroy', $patient) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this patient?')">
+                            <form action="{{ route('patients.destroy', $patient) }}" method="POST" class="d-inline" onsubmit="return confirmDelete('Delete this patient?')">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger">Delete</button>

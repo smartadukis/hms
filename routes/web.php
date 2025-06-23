@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\AppointmentController;
 
 /******************************************************************************************
  * Basic Routes
@@ -47,8 +48,14 @@ Route::middleware(['auth'])->group(function () {
     
     // Doctor
     Route::middleware('role:doctor')->group(function () {
-        Route::get('/doctor/patients', fn() => view('doctor.patients'))->name('doctor.patients');
+    Route::get('/doctor/patients', fn() => view('doctor.patients'))->name('doctor.patients');
+
+    Route::get('/doctor/appointments', [AppointmentController::class, 'doctorAppointments'])->name('doctor.appointments');
+    Route::get('/doctor/appointments/{appointment}/edit', [AppointmentController::class, 'editDoctor'])->name('doctor.appointments.edit');
+    Route::put('/doctor/appointments/{appointment}', [AppointmentController::class, 'updateDoctor'])->name('doctor.appointments.update');
+    
     });
+
 
     // Nurse
     Route::middleware('role:nurse')->group(function () {
@@ -88,4 +95,12 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('patients', PatientController::class);
+});
+
+/*******************************************************************************************
+ * Appointment Routes
+ ***************************************************************************************** */
+ 
+ Route::middleware(['auth'])->group(function () {
+    Route::resource('appointments', AppointmentController::class);
 });
