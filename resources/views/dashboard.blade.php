@@ -141,7 +141,7 @@
                 <a href="{{ route('admin.settings') }}">Settings</a>
                 <a href="{{ route('patients.index') }}">Manage Patients</a>
                 <a href="{{ route('appointments.index') }}">Manage Appointments</a>
-                
+                <a href="{{ route('lab-tests.index') }}">Manage Lab Tests</a>
             @endif
 
             <!-- @if(in_array($role, ['admin', 'receptionist']))
@@ -156,6 +156,11 @@
                 <a href="#">Prescriptions</a>
                 <a href="#">Lab Requests</a>
             @endif
+
+            @if(in_array($role, ['doctor', 'lab_staff']))
+                <a href="{{ route('lab-tests.index') }}">Manage Lab Tests</a>
+            @endif
+
 
             @if($role === 'nurse')
                 <a href="{{ route('nurse.appointments') }}">Appointments</a>

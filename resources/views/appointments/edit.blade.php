@@ -50,6 +50,7 @@
             </div>
 
             <button type="submit" class="btn btn-success">Update Appointment</button>
+            <a href="{{ route('appointments.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </x-layout>

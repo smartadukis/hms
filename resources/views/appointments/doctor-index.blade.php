@@ -1,6 +1,6 @@
 <x-layout>
     <div class="container mt-4">
-        <h2 class="mb-3">Appointments</h2>
+        <h2 class="mb-3">My Appointments</h2>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
@@ -14,7 +14,7 @@
             </a> -->
 
 
-        <form method="GET" id="filterForm" action="{{ route('appointments.index') }}"  class="d-flex flex-column flex-sm-row g-3 w-50">
+        <!-- <form method="GET" id="filterForm" action="{{ route('doctor.appointments') }}"  class="d-flex flex-column flex-sm-row g-3 w-50">
             <div class="col-md-4">
                 <select name="status" class="form-select" id="statusFilter">
                     <option value="">-- Filter by Status --</option>
@@ -23,7 +23,7 @@
                     <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                 </select>
             </div>
-        </form>
+        </form> -->
         </div>
 
 

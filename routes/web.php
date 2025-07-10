@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\AppointmentController;
 
@@ -104,3 +105,17 @@ Route::middleware(['auth'])->group(function () {
  Route::middleware(['auth'])->group(function () {
     Route::resource('appointments', AppointmentController::class);
 });
+
+/******************************************************************************************
+ * Lab Test Routes
+ ******************************************************************************************/
+
+ // Lab Test Routes (shared for now, can later separate per role)
+Route::middleware(['auth'])->group(function () {
+    Route::resource('lab-tests', LabTestController::class);
+});
+
+// Route to view lab test result file
+Route::get('/lab-tests/view-file/{id}', [LabTestController::class, 'viewFile'])->name('lab-tests.view-file');
+
+
