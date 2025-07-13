@@ -59,45 +59,77 @@
                         <td>{{ $med->is_controlled ? 'Yes' : 'No' }}</td>
                         <td>
                             <a href="{{ route('medications.edit', $med) }}" class="btn btn-sm btn-primary">Edit</a>
-                            <form action="{{ route('medications.destroy', $med) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this medication?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                            <button class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal"
+                                data-action="{{ route('medications.destroy', $med) }}">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 @empty
                     <tr><td colspan="7">No medications found.</td></tr>
                 @endforelse
             </tbody>
-            <tfoot>
-                <tr class="table-secondary text-dark fw-bold">
+            <tfoot class="table-dark text-white">
+                <tr>
                     <td>Total Medications: {{ $totalCount }}</td>
                     <td colspan="2"></td>
                     <td>Total Pack Sizes: {{ $totalPackSize }}</td>
                     <td colspan="3"></td>
                 </tr>
             </tfoot>
-
         </table>
 
         {{ $medications->links() }}
     </div>
 
+    {{-- Delete Confirmation Modal --}}
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this medication? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('filterForm');
             const filterSelect = document.getElementById('categoryFilter');
             const searchInput = document.getElementById('searchInput');
+            const deleteForm = document.getElementById('deleteForm');
+            const deleteModal = document.getElementById('confirmDeleteModal');
+
             let timeout = null;
 
             const handleFilter = () => {
                 if (timeout) clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    document.getElementById('filterForm').submit();
-                }, 500);
+                timeout = setTimeout(() => filterForm.submit(), 500);
             };
 
             filterSelect.addEventListener('change', handleFilter);
             searchInput.addEventListener('input', handleFilter);
+
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const action = button.getAttribute('data-action');
+                deleteForm.setAttribute('action', action);
+            });
         });
     </script>
 </x-layout>

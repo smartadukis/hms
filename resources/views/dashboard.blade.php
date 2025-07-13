@@ -173,15 +173,26 @@
                 <a href="{{ route('appointments.index') }}">Manage Appointments</a>
             @endif
 
+            <a href="{{ route('prescriptions.index') }}">Prescriptions</a>
+
+             @if($role === 'pharmacist')
+                <a href="{{ route('medications.index') }}">Medications</a>
+                
+            @endif
+
+            <form method="POST" action="{{ route('logout') }}">
+              @csrf
+              <button class="btn btn-link nav-link">Logout</button>
+            </form>
+
+            <!-- -------------------------------------------------------------------------------------- -->
+
+
             @if($role === 'lab_staff')
                 <a href="{{ route('lab.results') }}">Lab Requests</a>
                 <a href="#">Upload Results</a>
             @endif
 
-            @if($role === 'pharmacist')
-                <a href="{{ route('medications.index') }}">Medications</a>
-                
-            @endif
 
             @if($role === 'accountant')
                 <a href="{{ route('accountant.billing') }}">Billing & Invoices</a>
@@ -190,8 +201,7 @@
             @if($role === 'patient')
                 <a href="{{ route('patient.records') }}">My Records</a>
             @endif
-
-            <a href="{{ route('logout') }}">Logout</a>
+            
         </nav>
     </div>
 

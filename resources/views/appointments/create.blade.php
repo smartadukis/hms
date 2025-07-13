@@ -27,10 +27,13 @@
                 @error('doctor_id') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="scheduled_at" class="form-label">Date & Time</label>
-                <input type="datetime-local" name="scheduled_at" class="form-control">
-                @error('scheduled_at') <small class="text-danger">{{ $message }}</small> @enderror
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="scheduled_at" class="form-label">Date & Time</label>
+                    <input type="datetime-local" name="scheduled_at" class="form-control">
+                    @error('scheduled_at') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
             </div>
 
             <div class="mb-3">

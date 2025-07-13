@@ -59,11 +59,12 @@
                         <td>{{ $patient->creator->name ?? 'N/A' }}</td>
                         <td>
                             <a href="{{ route('patients.edit', $patient) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('patients.destroy', $patient) }}" method="POST" class="d-inline" onsubmit="return confirmDelete('Delete this patient?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                            <button class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal"
+                                data-action="{{ route('patients.destroy', $patient) }}">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 @empty
@@ -77,34 +78,61 @@
         {{ $patients->links() }}
     </div>
 
+    {{-- Delete Confirmation Modal --}}
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this patient? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Filter + Modal Script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const filterForm = document.getElementById('filterForm');
             const searchInput = document.getElementById('searchInput');
             const genderSelect = document.getElementById('genderSelect');
             const creatorSelect = document.getElementById('creatorSelect');
+            const deleteForm = document.getElementById('deleteForm');
+            const confirmModal = document.getElementById('confirmDeleteModal');
 
-            
-            genderSelect.addEventListener('change', function () {
-                filterForm.submit();
-            });
+            if (genderSelect) {
+                genderSelect.addEventListener('change', () => filterForm.submit());
+            }
 
-            creatorSelect.addEventListener('change', function () {
-                filterForm.submit();
-            });
+            if (creatorSelect) {
+                creatorSelect.addEventListener('change', () => filterForm.submit());
+            }
 
-            let searchTimeout;
             searchInput.addEventListener('input', function () {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    filterForm.submit();
-                }, 500); 
+                clearTimeout(window.searchTimeout);
+                window.searchTimeout = setTimeout(() => filterForm.submit(), 500);
             });
 
-         
-            searchInput.addEventListener('change', function() { 
-                 clearTimeout(searchTimeout); 
-                 filterForm.submit();
+            searchInput.addEventListener('change', () => {
+                clearTimeout(window.searchTimeout);
+                filterForm.submit();
+            });
+
+            confirmModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const action = button.getAttribute('data-action');
+                deleteForm.setAttribute('action', action);
             });
         });
     </script>

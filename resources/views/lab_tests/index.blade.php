@@ -45,10 +45,12 @@
                         </td>
                         <td>
                             <a href="{{ route('lab-tests.edit', $test) }}" class="btn btn-sm btn-primary">Edit</a>
-                            <form action="{{ route('lab-tests.destroy', $test) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this test?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                            <button class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#confirmDeleteModal"
+                                data-action="{{ route('lab-tests.destroy', $test) }}">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 @empty
@@ -59,4 +61,41 @@
 
         {{ $tests->links() }}
     </div>
+
+    {{-- Delete Confirmation Modal --}}
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this lab test? This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- JS to handle modal dynamic action --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const confirmModal = document.getElementById('confirmDeleteModal');
+            const deleteForm = document.getElementById('deleteForm');
+
+            confirmModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const action = button.getAttribute('data-action');
+                deleteForm.setAttribute('action', action);
+            });
+        });
+    </script>
 </x-layout>

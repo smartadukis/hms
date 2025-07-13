@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Support\Facades\Hash;
+use Database\Seeders\PrescriptionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,7 +18,9 @@ class DatabaseSeeder extends Seeder
 {
 
     //$this->call(PatientSeeder::class);
+    $this->call(PrescriptionSeeder::class);
     //$this->call(UserSeeder::class);
+    //$this->call(MedicationSeeder::class);
     // Create a super admin user if it doesn't exist
     User::firstOrCreate(
         ['email' => 'admin@hms.com'], // unique check

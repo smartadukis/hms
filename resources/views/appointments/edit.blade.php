@@ -27,9 +27,11 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="scheduled_at" class="form-label">Date & Time</label>
-                <input type="datetime-local" name="scheduled_at" value="{{ \Carbon\Carbon::parse($appointment->scheduled_at)->format('Y-m-d\TH:i') }}" class="form-control" required>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="scheduled_at" class="form-label">Date & Time</label>
+                    <input type="datetime-local" name="scheduled_at" value="{{ \Carbon\Carbon::parse($appointment->scheduled_at)->format('Y-m-d\TH:i') }}" class="form-control" required>
+                </div>
             </div>
 
             <div class="mb-3">

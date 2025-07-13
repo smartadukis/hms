@@ -7,6 +7,7 @@ use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\PrescriptionController;
 
 /******************************************************************************************
  * Basic Routes
@@ -126,5 +127,12 @@ Route::middleware(['auth', 'role:admin,pharmacist'])->group(function () {
     Route::resource('medications', MedicationController::class);
 });
 
+/*******************************************************************************************
+ * Prescription Routes
+ ******************************************************************************************/
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('prescriptions', PrescriptionController::class);
+});
 
 
