@@ -164,4 +164,40 @@ class PrescriptionController extends Controller
 
         return redirect()->route('prescriptions.index')->with('success', 'Prescription deleted successfully.');
     }
+
+/**
+ * Show form to change status/notes.
+ */
+public function editStatus(Prescription $prescription)
+{
+    //$this->authorize('update', $prescription);
+
+    return view('prescriptions.edit-status', compact('prescription'));
+}
+
+/**
+ * Update only status and notes, adjust stock if dispensed.
+ */
+public function updateStatus(Request $request, Prescription $prescription)
+{
+    $request->validate([
+        'status' => 'required|in:pending,partial,dispensed',
+        'notes'  => 'nullable|string',
+    ]);
+
+    $old = $prescription->status;
+    $prescription->update($request->only('status','notes'));
+
+    // If newly marked dispensed, subtract stock
+    if ($old !== 'dispensed' && $request->status === 'dispensed') {
+        foreach ($prescription->items as $item) {
+            $med = $item->medication;
+            // subtract quantity, prevent negative
+            $med->decrement('pack_size', $item->dosage_quantity);
+        }
+    }
+
+    return redirect()->route('prescriptions.index')->with('success','Prescription updated.');
+}
+
 }

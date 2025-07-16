@@ -135,4 +135,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('prescriptions', PrescriptionController::class);
 });
 
+Route::middleware(['auth'])->group(function(){
+    Route::get('prescriptions/{prescription}/edit-status', [PrescriptionController::class,'editStatus'])->name('prescriptions.editStatus');
+    Route::put('prescriptions/{prescription}/update-status',[PrescriptionController::class,'updateStatus'])->name('prescriptions.updateStatus');
+});
+
+
 

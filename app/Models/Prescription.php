@@ -14,6 +14,7 @@ class Prescription extends Model
         'patient_id',
         'notes',
         'created_by',
+        'status',
     ];
 
     public function doctor()

@@ -38,7 +38,7 @@
                     <th>Patient</th>
                     <th>Doctor</th>
                     <th>Date</th>
-                    <th>Notes</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -48,7 +48,12 @@
                         <td>{{ $prescription->patient->name }}</td>
                         <td>{{ $prescription->doctor->name }}</td>
                         <td>{{ $prescription->created_at->format('Y-m-d') }}</td>
-                        <td>{{ Str::limit($prescription->notes, 30) }}</td>
+                        <td>
+                            <span class="badge 
+                                {{ $prescription->status==='pending' ? 'bg-secondary' : ($prescription->status==='partial' ? 'bg-warning text-dark' : 'bg-success') }}">
+                                {{ ucfirst($prescription->status) }}
+                            </span>
+                        </td>
                         <td>
                             <a href="{{ route('prescriptions.show', $prescription) }}" class="btn btn-sm btn-info">View</a>
 

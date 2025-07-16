@@ -2,6 +2,7 @@
     <div class="container">
         <h2 class="mb-3">Prescription Details</h2>
 
+
         <p><strong>Patient:</strong> {{ $prescription->patient->name }}</p>
         <p><strong>Doctor:</strong> {{ $prescription->doctor->name }}</p>
         <p><strong>Notes:</strong> {{ $prescription->notes ?? 'None' }}</p>
@@ -31,5 +32,17 @@
         </table>
 
         <a href="{{ route('prescriptions.index') }}" class="btn btn-secondary">Back</a>
+
+            @php
+                $user = auth()->user();
+                $isDoctorOwner = $user->role === 'doctor' && $prescription->doctor_id === $user->id;
+                $canManage = in_array($user->role, ['admin', 'receptionist']) || $isDoctorOwner;
+            @endphp
+
+            @if ($canManage)
+                <a href="{{ route('prescriptions.edit', $prescription) }}" class="btn btn-sm btn-primary mx-2">Edit</a>
+                <a href="{{ route('prescriptions.editStatus', $prescription) }}" class="btn btn-sm btn-info">Change Status</a>
+            @endif
+
     </div>
 </x-layout>
