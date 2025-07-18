@@ -72,18 +72,28 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md-4">
+             <div class="row mb-3">
+                <div class="col-md-3">
                     <label>
-                        <input type="checkbox" name="is_controlled" {{ old('is_controlled', $medication->is_controlled) ? 'checked' : '' }}>
+                        <input type="checkbox" name="is_controlled" {{ old('is_controlled') ? 'checked' : '' }}>
                         Controlled Medication? (Optional)
                     </label>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label>
-                        <input type="checkbox" name="requires_refrigeration" {{ old('requires_refrigeration', $medication->requires_refrigeration) ? 'checked' : '' }}>
+                        <input type="checkbox" name="requires_refrigeration" {{ old('requires_refrigeration') ? 'checked' : '' }}>
                         Requires Refrigeration? (Optional)
                     </label>
+                </div>
+                <div class="col-md-2">
+                    <label for="quantity" class="form-label">Stock Quantity</label>
+                    <input type="number" class="form-control" name="quantity" value="{{ old('quantity', $medication->quantity) }}" required>
+                    @error('quantity') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+                <div class="col-md-2">
+                    <label for="reorder_level" class="form-label">Reorder Level (optional)</label>
+                    <input type="number" class="form-control" name="reorder_level" value="{{ old('reorder_level', $medication->reorder_level) }}">
+                    @error('reorder_level') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
             </div>
 

@@ -1,6 +1,9 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{{ route('dashboard') }}">HEALER HMS</a>
+    <a class="navbar-brand d-flex align-items-center" href="{{ route('dashboard') }}">
+      <img src="{{ asset('images/logo.png') }}" alt="Healer HMS Logo" height="32" class="me-2">
+      <span>Healer HMS</span>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
       <span class="navbar-toggler-icon"></span>
     </button>

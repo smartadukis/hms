@@ -200,4 +200,39 @@ public function updateStatus(Request $request, Prescription $prescription)
     return redirect()->route('prescriptions.index')->with('success','Prescription updated.');
 }
 
+   /**
+     * Dispense a prescription.
+     */
+    public function dispense(Prescription $prescription)
+    {
+        $user = auth()->user();
+        if (!in_array($user->role, ['admin', 'pharmacist'])) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Only dispense once
+        if ($prescription->status === 'dispensed') {
+            return back()->with('success', 'Already dispensed.');
+        }
+
+        foreach ($prescription->items as $item) {
+            $med = $item->medication;
+
+            // Check if stock is enough
+            if ($med->quantity < $item->dosage_quantity) {
+                return back()->with('error', "Insufficient stock for {$med->name}");
+            }
+
+            // Deduct from inventory
+            $med->decrement('quantity', $item->dosage_quantity);
+        }
+
+        $prescription->update(['status' => 'dispensed']);
+
+        return back()->with('success', 'Prescription dispensed and stock updated.');
+    }
+
+
 }
+
+

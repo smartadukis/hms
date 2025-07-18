@@ -125,6 +125,8 @@ Route::get('/lab-tests/view-file/{id}', [LabTestController::class, 'viewFile'])-
  ******************************************************************************************/
 Route::middleware(['auth', 'role:admin,pharmacist'])->group(function () {
     Route::resource('medications', MedicationController::class);
+    Route::get('/medications/{medication}/restock', [MedicationController::class, 'restockForm'])->name('medications.restockForm');
+    Route::post('/medications/{medication}/restock', [MedicationController::class, 'restock'])->name('medications.restock');
 });
 
 /*******************************************************************************************
@@ -138,6 +140,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function(){
     Route::get('prescriptions/{prescription}/edit-status', [PrescriptionController::class,'editStatus'])->name('prescriptions.editStatus');
     Route::put('prescriptions/{prescription}/update-status',[PrescriptionController::class,'updateStatus'])->name('prescriptions.updateStatus');
+    Route::put('/prescriptions/{prescription}/dispense', [PrescriptionController::class, 'dispense'])->name('prescriptions.dispense');
+
+
 });
 
 

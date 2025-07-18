@@ -43,3 +43,16 @@ body {
     background: #17a2b8; /* Bootstrap info */
     color: #fff;
 }
+
+/* PDF Content Styling */
+#pdf-content {
+    background-color: #fff !important;
+    color: #000;
+}
+
+/* Action Buttons Container */
+.pdf-action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}

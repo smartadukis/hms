@@ -1,6 +1,6 @@
 <x-layout>
     <div class="container">
-        <h2 class="mb-4">Medications</h2>
+        <h2 class="mb-4">Medications Inventory</h2>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
@@ -8,13 +8,18 @@
 
         <form method="GET" action="{{ route('medications.index') }}" id="filterForm" class="row mb-3">
             <div class="col-md-5">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, generic name or barcode" class="form-control" id="searchInput">
+                <input type="text" name="search" id="searchInput"
+                       value="{{ request('search') }}"
+                       placeholder="Search by name, generic name, or barcode"
+                       class="form-control">
             </div>
             <div class="col-md-4">
-                <select name="category" class="form-select" id="categoryFilter">
+                <select name="category" id="categoryFilter" class="form-select">
                     <option value="">-- Filter by Category --</option>
                     @foreach($categories as $cat)
-                        <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                        <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>
+                            {{ $cat }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -32,6 +37,7 @@
                     <th>Name</th>
                     <th>Strength</th>
                     <th>Category</th>
+                    <th>Stock</th>
                     <th>Pack Size</th>
                     <th>Manufacturer</th>
                     <th>Controlled?</th>
@@ -39,21 +45,23 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $totalCount = 0;
-                    $totalPackSize = 0;
-                @endphp
+                @php $totalCount = 0; $totalPackSize = 0; @endphp
 
                 @forelse ($medications as $med)
                     @php
                         $totalCount++;
                         $totalPackSize += $med->pack_size;
                     @endphp
-
                     <tr>
-                        <td>{{ $med->name }}</td>
+                        <td>
+                            {{ $med->name }}
+                            @if($med->quantity <= $med->reorder_level)
+                                <span class="badge bg-danger ms-1">Low Stock</span>
+                            @endif
+                        </td>
                         <td>{{ $med->strength }} {{ $med->unit_of_strength }}</td>
                         <td>{{ $med->category }}</td>
+                        <td>{{ $med->quantity }}</td>
                         <td>{{ $med->pack_size }} {{ $med->dispensing_unit }}</td>
                         <td>{{ $med->manufacturer ?? 'N/A' }}</td>
                         <td>{{ $med->is_controlled ? 'Yes' : 'No' }}</td>
@@ -68,13 +76,14 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7">No medications found.</td></tr>
+                    <tr><td colspan="8">No medications found.</td></tr>
                 @endforelse
             </tbody>
             <tfoot class="table-dark text-white">
                 <tr>
                     <td>Total Medications: {{ $totalCount }}</td>
                     <td colspan="2"></td>
+                    <td colspan="1"></td>
                     <td>Total Pack Sizes: {{ $totalPackSize }}</td>
                     <td colspan="3"></td>
                 </tr>
@@ -108,28 +117,28 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const filterForm = document.getElementById('filterForm');
-            const filterSelect = document.getElementById('categoryFilter');
-            const searchInput = document.getElementById('searchInput');
-            const deleteForm = document.getElementById('deleteForm');
-            const deleteModal = document.getElementById('confirmDeleteModal');
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filterForm');
+        const filterSelect = document.getElementById('categoryFilter');
+        const searchInput = document.getElementById('searchInput');
+        const deleteForm = document.getElementById('deleteForm');
+        const deleteModal = document.getElementById('confirmDeleteModal');
 
-            let timeout = null;
+        let timeout = null;
 
-            const handleFilter = () => {
-                if (timeout) clearTimeout(timeout);
-                timeout = setTimeout(() => filterForm.submit(), 500);
-            };
+        const handleFilter = () => {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(() => filterForm.submit(), 500);
+        };
 
-            filterSelect.addEventListener('change', handleFilter);
-            searchInput.addEventListener('input', handleFilter);
+        filterSelect.addEventListener('change', handleFilter);
+        searchInput.addEventListener('input', handleFilter);
 
-            deleteModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-                const action = button.getAttribute('data-action');
-                deleteForm.setAttribute('action', action);
-            });
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const action = button.getAttribute('data-action');
+            deleteForm.setAttribute('action', action);
         });
+    });
     </script>
 </x-layout>

@@ -23,6 +23,8 @@ class Medication extends Model
         'barcode_or_ndc',
         'description',
         'is_controlled',
+        'quantity',
+        'reorder_level',
         'requires_refrigeration',
         'storage_conditions',
         'created_by',
