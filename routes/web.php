@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\MedicationController;
@@ -141,9 +142,16 @@ Route::middleware(['auth'])->group(function(){
     Route::get('prescriptions/{prescription}/edit-status', [PrescriptionController::class,'editStatus'])->name('prescriptions.editStatus');
     Route::put('prescriptions/{prescription}/update-status',[PrescriptionController::class,'updateStatus'])->name('prescriptions.updateStatus');
     Route::put('/prescriptions/{prescription}/dispense', [PrescriptionController::class, 'dispense'])->name('prescriptions.dispense');
-
-
 });
+
+/******************************************************************************************
+ * Invoice Routes
+ ******************************************************************************************/
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('invoices', InvoiceController::class);
+});
+
 
 
 

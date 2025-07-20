@@ -143,6 +143,7 @@
                 <a href="{{ route('appointments.index') }}">Manage Appointments</a>
                 <a href="{{ route('lab-tests.index') }}">Manage Lab Tests</a>
                 <a href="{{ route('medications.index') }}">Manage Medications</a>
+                <a href="{{ route('invoices.index') }}">Manage Invoices</a>
             @endif
 
             <!-- @if(in_array($role, ['admin', 'receptionist']))
@@ -163,21 +164,18 @@
             @endif
 
 
-            @if($role === 'nurse')
-                <a href="{{ route('nurse.appointments') }}">Appointments</a>
-                <a href="#">Patient Vitals</a>
-            @endif
-
             @if($role === 'receptionist')
                 <a href="{{ route('patients.index') }}">Manage Patients</a>
                 <a href="{{ route('appointments.index') }}">Manage Appointments</a>
+                <a href="{{ route('invoices.index') }}">Manage Invoices</a>
+                <a href="{{ route('lab-tests.index') }}">Manage Lab Tests</a>
             @endif
 
-            <a href="{{ route('prescriptions.index') }}">Prescriptions</a>
+            <a href="{{ route('prescriptions.index') }}">Manage Prescriptions</a>
 
              @if($role === 'pharmacist')
-                <a href="{{ route('medications.index') }}">Medications</a>
-                
+                <a href="{{ route('medications.index') }}">Manage Medications</a>
+
             @endif
 
             <form method="POST" action="{{ route('logout') }}">
@@ -185,22 +183,16 @@
               <button class="btn btn-link nav-link">Logout</button>
             </form>
 
-            <!-- -------------------------------------------------------------------------------------- -->
-
-
-            @if($role === 'lab_staff')
-                <a href="{{ route('lab.results') }}">Lab Requests</a>
-                <a href="#">Upload Results</a>
-            @endif
-
-
             @if($role === 'accountant')
-                <a href="{{ route('accountant.billing') }}">Billing & Invoices</a>
+                <a href="{{ route('invoices.index') }}">Manage Invoices</a>
             @endif
 
             @if($role === 'patient')
                 <a href="{{ route('patient.records') }}">My Records</a>
             @endif
+
+            <!-- -------------------------------------------------------------------------------------- -->
+
             
         </nav>
     </div>
