@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
 {
 
     //$this->call(PatientSeeder::class);
-    $this->call(PrescriptionSeeder::class);
+    //$this->call(PrescriptionSeeder::class);
     //$this->call(UserSeeder::class);
     //$this->call(MedicationSeeder::class);
+    $this->call(AccountSeeder::class);
     // Create a super admin user if it doesn't exist
     User::firstOrCreate(
         ['email' => 'admin@hms.com'], // unique check

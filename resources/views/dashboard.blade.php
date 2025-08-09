@@ -144,6 +144,8 @@
                 <a href="{{ route('lab-tests.index') }}">Manage Lab Tests</a>
                 <a href="{{ route('medications.index') }}">Manage Medications</a>
                 <a href="{{ route('invoices.index') }}">Manage Invoices</a>
+                <a href="{{ route('accounts.index') }}"><i class="fas fa-book"></i> Accounting</a>
+
             @endif
 
             <!-- @if(in_array($role, ['admin', 'receptionist']))
@@ -185,6 +187,7 @@
 
             @if($role === 'accountant')
                 <a href="{{ route('invoices.index') }}">Manage Invoices</a>
+                <a href="{{ route('accounts.index') }}"><i class="fas fa-book"></i> Accounting</a>w
             @endif
 
             @if($role === 'patient')

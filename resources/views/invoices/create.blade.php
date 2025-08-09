@@ -42,13 +42,12 @@
             </tbody>
         </table>
 
-       <div class="d-flex justify-content-between align-items-center mt-4">
+       <div class="d-flex gap-3 mt-4">
             <button type="button" class="btn btn-sm btn-secondary" id="add-row">+ Add Item</button>
-            <div>
-                <a href="{{ route('invoices.index') }}" class="btn btn-dark">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Invoice</button>
-            </div>
+            <button type="submit" class="btn btn-primary">Save Invoice</button>
+            <a href="{{ route('invoices.index') }}" class="btn btn-outline-dark">Cancel</a>
         </div>
+
 
     </form>
     </div>

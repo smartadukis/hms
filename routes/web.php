@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\PatientController;
@@ -151,6 +152,15 @@ Route::middleware(['auth'])->group(function(){
 Route::middleware(['auth'])->group(function () {
     Route::resource('invoices', InvoiceController::class);
 });
+
+/******************************************************************************************
+ * Accounting Routes
+ ******************************************************************************************/
+
+Route::middleware(['auth', 'role:admin,accountant'])->group(function () {
+    Route::resource('accounts', AccountController::class);
+});
+
 
 
 
