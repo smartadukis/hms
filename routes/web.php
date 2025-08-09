@@ -9,6 +9,7 @@ use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PrescriptionController;
 
 /******************************************************************************************
@@ -159,7 +160,9 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'role:admin,accountant'])->group(function () {
     Route::resource('accounts', AccountController::class);
+    Route::resource('journal', JournalEntryController::class);
 });
+
 
 
 

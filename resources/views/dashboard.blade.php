@@ -145,6 +145,7 @@
                 <a href="{{ route('medications.index') }}">Manage Medications</a>
                 <a href="{{ route('invoices.index') }}">Manage Invoices</a>
                 <a href="{{ route('accounts.index') }}"><i class="fas fa-book"></i> Accounting</a>
+                <a href="{{ route('journal.index') }}">Manage Journal</a>
 
             @endif
 
@@ -187,7 +188,8 @@
 
             @if($role === 'accountant')
                 <a href="{{ route('invoices.index') }}">Manage Invoices</a>
-                <a href="{{ route('accounts.index') }}"><i class="fas fa-book"></i> Accounting</a>w
+                <a href="{{ route('accounts.index') }}"><i class="fas fa-book"></i> Accounting</a>
+                <a href="{{ route('journal.index') }}">Manage Journal</a>
             @endif
 
             @if($role === 'patient')
