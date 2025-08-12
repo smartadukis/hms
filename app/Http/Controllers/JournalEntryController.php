@@ -68,38 +68,61 @@ class JournalEntryController extends Controller
 
     /**
      * Store a new journal entry and its lines.
-     * Ensures debits == credits.
+     * Ensures debits == credits and each non-empty line is valid.
      */
     public function store(Request $request)
     {
+        // Basic header-level validation (don't require every line field here)
         $request->validate([
             'entry_date' => 'nullable|date',
             'reference' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'lines' => 'required|array|min:2',
-            'lines.*.account_id' => 'required|exists:accounts,id',
+            'lines' => 'required|array|min:1',
             'lines.*.debit' => 'nullable|numeric|min:0',
             'lines.*.credit' => 'nullable|numeric|min:0',
             'lines.*.narration' => 'nullable|string',
         ]);
 
-        // normalize lines, compute totals
-        $totalDebit = 0;
-        $totalCredit = 0;
-        $normalized = [];
+        $lines = $request->input('lines', []);
 
-        foreach ($request->input('lines') as $line) {
+        $normalized = [];
+        $totalDebit = 0.0;
+        $totalCredit = 0.0;
+
+        foreach ($lines as $i => $line) {
+            $accountId = $line['account_id'] ?? null;
             $debit = (float) ($line['debit'] ?? 0);
             $credit = (float) ($line['credit'] ?? 0);
-            // ignore zero-zero lines
-            if ($debit == 0 && $credit == 0) continue;
+            $narration = $line['narration'] ?? null;
+
+            // skip entirely empty template rows
+            if (empty($accountId) && $debit == 0 && $credit == 0 && empty($narration)) {
+                continue;
+            }
+
+            // account_id is required for non-empty lines
+            if (empty($accountId) || !\App\Models\Account::where('id', $accountId)->exists()) {
+                return back()->withInput()->withErrors(["lines.$i.account_id" => "Please select a valid account for line " . ($i+1)]);
+            }
+
+            // at least one of debit or credit must be > 0
+            if ($debit <= 0 && $credit <= 0) {
+                return back()->withInput()->withErrors(["lines.$i" => "Line ".($i+1)." must have either a debit or a credit amount."]);
+            }
+
+            // cannot have both debit and credit > 0 on same line
+            if ($debit > 0 && $credit > 0) {
+                return back()->withInput()->withErrors(["lines.$i" => "Line ".($i+1)." cannot have both debit and credit amounts."]);
+            }
+
             $totalDebit += $debit;
             $totalCredit += $credit;
+
             $normalized[] = [
-                'account_id' => $line['account_id'],
+                'account_id' => $accountId,
                 'debit' => number_format($debit, 2, '.', ''),
                 'credit' => number_format($credit, 2, '.', ''),
-                'narration' => $line['narration'] ?? null,
+                'narration' => $narration,
             ];
         }
 
@@ -107,17 +130,17 @@ class JournalEntryController extends Controller
             return back()->withInput()->withErrors(['lines' => 'Please provide at least two non-empty lines.']);
         }
 
-        // ensure balanced
-        if (number_format($totalDebit,2,'.','') !== number_format($totalCredit,2,'.','')) {
+        // Balanced check
+        if (number_format($totalDebit, 2, '.', '') !== number_format($totalCredit, 2, '.', '')) {
             return back()->withInput()->withErrors(['balance' => 'Journal entry must be balanced. Total debits must equal total credits.']);
         }
 
-        DB::transaction(function () use ($request, $normalized) {
-            $entry = JournalEntry::create([
+        \DB::transaction(function () use ($request, $normalized) {
+            $entry = \App\Models\JournalEntry::create([
                 'entry_date' => $request->entry_date ?? now()->toDateString(),
                 'reference' => $request->reference,
                 'description' => $request->description,
-                'created_by' => Auth::id(),
+                'created_by' => auth()->id(),
                 'approved' => false,
             ]);
 
@@ -126,7 +149,7 @@ class JournalEntryController extends Controller
             }
         });
 
-        return redirect()->route('journal.index')->with('success','Journal entry recorded.');
+        return redirect()->route('journal.index')->with('success', 'Journal entry recorded.');
     }
 
     /**
@@ -157,50 +180,72 @@ class JournalEntryController extends Controller
             'entry_date' => 'nullable|date',
             'reference' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'lines' => 'required|array|min:2',
-            'lines.*.account_id' => 'required|exists:accounts,id',
+            'lines' => 'required|array|min:1',
             'lines.*.debit' => 'nullable|numeric|min:0',
             'lines.*.credit' => 'nullable|numeric|min:0',
             'lines.*.narration' => 'nullable|string',
         ]);
 
-        $totalDebit = 0;
-        $totalCredit = 0;
+        $lines = $request->input('lines', []);
         $normalized = [];
+        $totalDebit = 0.0;
+        $totalCredit = 0.0;
 
-        foreach ($request->input('lines') as $line) {
+        foreach ($lines as $i => $line) {
+            $accountId = $line['account_id'] ?? null;
             $debit = (float) ($line['debit'] ?? 0);
             $credit = (float) ($line['credit'] ?? 0);
-            if ($debit == 0 && $credit == 0) continue;
+            $narration = $line['narration'] ?? null;
+
+            if (empty($accountId) && $debit == 0 && $credit == 0 && empty($narration)) {
+                continue;
+            }
+
+            if (empty($accountId) || !\App\Models\Account::where('id', $accountId)->exists()) {
+                return back()->withInput()->withErrors(["lines.$i.account_id" => "Please select a valid account for line " . ($i+1)]);
+            }
+
+            if ($debit <= 0 && $credit <= 0) {
+                return back()->withInput()->withErrors(["lines.$i" => "Line ".($i+1)." must have either a debit or a credit amount."]);
+            }
+
+            if ($debit > 0 && $credit > 0) {
+                return back()->withInput()->withErrors(["lines.$i" => "Line ".($i+1)." cannot have both debit and credit amounts."]);
+            }
+
             $totalDebit += $debit;
             $totalCredit += $credit;
+
             $normalized[] = [
-                'account_id' => $line['account_id'],
-                'debit' => number_format($debit,2,'.',''),
-                'credit' => number_format($credit,2,'.',''),
-                'narration' => $line['narration'] ?? null,
+                'account_id' => $accountId,
+                'debit' => number_format($debit, 2, '.', ''),
+                'credit' => number_format($credit, 2, '.', ''),
+                'narration' => $narration,
             ];
         }
 
-        if (number_format($totalDebit,2,'.','') !== number_format($totalCredit,2,'.','')) {
+        if (count($normalized) < 2) {
+            return back()->withInput()->withErrors(['lines' => 'Please provide at least two non-empty lines.']);
+        }
+
+        if (number_format($totalDebit, 2, '.', '') !== number_format($totalCredit, 2, '.', '')) {
             return back()->withInput()->withErrors(['balance' => 'Journal entry must be balanced.']);
         }
 
-        DB::transaction(function () use ($journal, $request, $normalized) {
+        \DB::transaction(function () use ($journal, $request, $normalized) {
             $journal->update([
                 'entry_date' => $request->entry_date,
                 'reference' => $request->reference,
                 'description' => $request->description,
             ]);
 
-            // delete old lines and create new ones
             $journal->lines()->delete();
             foreach ($normalized as $ln) {
                 $journal->lines()->create($ln);
             }
         });
 
-        return redirect()->route('journal.index')->with('success','Journal updated.');
+        return redirect()->route('journal.index')->with('success', 'Journal updated.');
     }
 
     /**

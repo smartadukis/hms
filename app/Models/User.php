@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'address',
-        'role', // Assuming role is a string, e.g., 'admin', 'staff
+        'role', 
         'password',
     ];
 
@@ -45,8 +45,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-   // const ROLES = ['admin', 'doctor', 'nurse', 'staff'];
 
 
     // Role based helper methods

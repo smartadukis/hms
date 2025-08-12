@@ -57,7 +57,7 @@
                 <th>Created By</th>
                 <th>Lines</th>
                 <th>Approved</th>
-                <th style="width:170px">Actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -77,12 +77,19 @@
                     </td>
                     <td>
                         <a href="{{ route('journal.show', $entry) }}" class="btn btn-sm btn-info">View</a>
-                        <a href="{{ route('journal.edit', $entry) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('journal.destroy', $entry) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this entry?')">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </form>
+                        <!-- <a href="{{ route('journal.edit', $entry) }}" class="btn btn-sm btn-warning">Edit</a> -->
+
+                        {{-- Delete trigger --}}
+                        <button
+                            class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#confirmDeleteModal"
+                            data-action="{{ route('journal.destroy', $entry) }}"
+                        >
+                            Delete
+                        </button>
                     </td>
+
                 </tr>
             @empty
                 <tr><td colspan="7" class="text-center">No journal entries found.</td></tr>
@@ -97,6 +104,42 @@
         <div>{{ $entries->links() }}</div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal (single dynamic modal) -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <form method="POST" id="deleteForm" class="modal-content">
+            @csrf
+            @method('DELETE')
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this journal entry? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteModal = document.getElementById('confirmDeleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const action = button.getAttribute('data-action');
+        const form = document.getElementById('deleteForm');
+        form.setAttribute('action', action);
+    });
+
+    // existing filter auto-submit JS remains here...
+});
+</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

@@ -1,3 +1,4 @@
+/* public/css/custom.css */
 /* Custom CSS for HMS */
 html,
 body {
@@ -55,4 +56,61 @@ body {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+}
+
+/* Dashboard helper styles (append) */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #2c3e50;
+    color: #ecf0f1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.main-content {
+    margin-left: 220px;
+    padding: 28px 30px;
+    min-height: 100vh;
+    background: #f4f7f9;
+}
+.sidebar .sidebar-nav a {
+    display: block;
+    color: #bdc3c7;
+    text-decoration: none;
+    margin: 8px 0;
+    padding: 8px 10px;
+    border-left: 3px solid transparent;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.sidebar .sidebar-nav a.active,
+.sidebar .sidebar-nav a:hover {
+    background: #34495e;
+    color: #fff;
+    border-left-color: #17a2b8;
+}
+@media (max-width: 767px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 12px;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 16px;
+    }
+    .sidebar .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .sidebar .sidebar-nav a {
+        padding: 6px 8px;
+        font-size: 0.95rem;
+    }
 }

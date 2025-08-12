@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/AppointmentController.php
 
 namespace App\Http\Controllers;
 

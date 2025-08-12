@@ -7,10 +7,16 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LabTestController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MedicationController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CashAccountController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PrescriptionController;
+
+use App\Http\Controllers\CashTransactionController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 /******************************************************************************************
  * Basic Routes
@@ -39,16 +45,20 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
 
     // Shared dashboard view
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Admin
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/users', fn() => view('admin.users'))->name('admin.users');
-        Route::get('/admin/settings', fn() => view('admin.settings'))->name('admin.settings');
+    /******************************************************************************************
+     * Admin Routes
+     ******************************************************************************************/
+
+    Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+    Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}', [AdminUserController::class, 'show'])->name('users.show');     
+    Route::get('users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
     });
 
     
@@ -161,6 +171,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin,accountant'])->group(function () {
     Route::resource('accounts', AccountController::class);
     Route::resource('journal', JournalEntryController::class);
+    Route::resource('cash-accounts', CashAccountController::class);
+    Route::resource('cash-transactions', CashTransactionController::class)->except(['edit','update']);
+    Route::get('transactions/report', [TransactionController::class, 'report'])->name('transactions.report');
+    Route::resource('transactions', TransactionController::class);
 });
 
 
