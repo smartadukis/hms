@@ -1,66 +1,260 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Hospital Management System (HMS)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A complete Hospital Management System built with **Laravel**, **MySQL**, **Blade Templates**, **Bootstrap**, **Custom CSS**, and **Vanilla JavaScript**.  
+Designed for hospitals, clinics, and medical centers to manage patients, appointments, prescriptions, billing, lab tests, and more — all in one secure and user-friendly platform.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The system is modular and role-based, ensuring only authorized users can access specific functionalities.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. **Authentication & Authorization**
 
-## Learning Laravel
+-   Secure login/logout system.
+-   Role-based access control for:
+    -   **Admin**
+    -   **Doctor**
+    -   **Nurse**
+    -   **Receptionist**
+    -   **Lab Staff**
+    -   **Pharmacist**
+    -   **Accountant**
+    -   **Patient**
+    -   **Staff** (optional/general users)
+-   Password hashing & Laravel’s built-in CSRF protection.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 2. **Dashboard Module**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Controller:** `DashboardController.php`
 
-## Laravel Sponsors
+-   Dynamic dashboard for each role.
+-   Quick statistics (patients count, appointments today, pending lab tests, invoices, etc.).
+-   Graphs/charts for visual analytics.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+### 3. **Patient Management**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+**Controller:** `PatientController.php`
 
-## Contributing
+-   Add, edit, and delete patients.
+-   Search patients by name, email, or phone.
+-   View detailed patient profiles including medical history, prescriptions, and appointments.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+### 4. **Appointment Management**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Controller:** `AppointmentController.php`
 
-## Security Vulnerabilities
+-   Schedule, update, and cancel appointments.
+-   Filter by doctor or date.
+-   Appointment status tracking (Pending, Confirmed, Completed, Cancelled).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
+
+### 5. **Prescription Management**
+
+**Controller:** `PrescriptionController.php`
+
+-   Doctors can create and update prescriptions for their patients.
+-   All authenticated roles (including pharmacists & nurses) can view all prescriptions.
+-   Doctor-specific filtering for prescriptions.
+-   Patient search and doctor filter on the index view.
+
+---
+
+### 6. **Medication Management**
+
+**Controller:** `MedicationController.php`
+
+-   Manage available medications.
+-   Track medicine stock levels.
+-   Link medicines to prescriptions.
+
+---
+
+### 7. **Lab Tests**
+
+**Controller:** `LabTestController.php`
+
+-   Record lab test requests.
+-   Assign lab tests to patients.
+-   Update results and mark tests as completed.
+
+---
+
+### 8. **Pharmacy Inventory Management**
+
+**Controllers:** `MedicationController.php` & `Pharmacy` logic in related modules.
+
+-   Track medicine inventory.
+-   Update stock after prescriptions are fulfilled.
+-   Alerts for low stock.
+
+---
+
+### 9. **Billing & Invoicing**
+
+**Controller:** `InvoiceController.php`
+
+-   Create invoices for treatments, lab tests, and prescriptions.
+-   Track payment status (Paid, Unpaid, Partially Paid).
+-   Print and download invoices as PDF.
+
+---
+
+### 10. **Accounting**
+
+**Controllers:**
+
+-   `CashAccountController.php`
+-   `CashTransactionController.php`
+-   `JournalEntryController.php`
+-   `TransactionController.php`
+
+**Features:**
+
+-   Maintain multiple cash accounts.
+-   Record incoming & outgoing transactions.
+-   Generate accounting journal entries.
+-   Financial summaries and transaction history.
+
+---
+
+### 11. **User & Role Management**
+
+**Controller:** `Admin/UserController.php`
+
+-   Admin can create, edit, and delete users.
+-   Assign roles to users.
+-   Prevent admins from demoting or deleting themselves.
+-   Search and filter users by role.
+
+---
+
+### 12. **Account Management**
+
+**Controller:** `AccountController.php`
+
+-   Manage system account settings.
+-   Handle personal profile updates for users.
+
+---
+
+## 🗂️ Project Structure
+
+app/
+Http/
+Controllers/
+AccountController.php
+AppointmentController.php
+AuthController.php
+CashAccountController.php
+CashTransactionController.php
+Controller.php
+DashboardController.php
+InvoiceController.php
+JournalEntryController.php
+LabTestController.php
+MedicationController.php
+PatientController.php
+PrescriptionController.php
+TransactionController.php
+Admin/
+UserController.php
+resources/
+views/ # Blade templates for UI
+css/ # Custom styles
+js/ # Vanilla JavaScript scripts
+public/
+css/
+js/
+database/
+migrations/ # Laravel migration files
+tests/
+Unit/ # Unit tests for controllers & logic
+Feature/ # Feature tests for application routes
+
+---
+
+## 💻 Tech Stack
+
+-   **Backend:** Laravel (PHP)
+-   **Frontend:** Blade, Bootstrap 5, Custom CSS, Vanilla JS
+-   **Database:** MySQL
+-   **Authentication:** Laravel Auth with role-based access
+-   **Testing:** PHPUnit (Unit & Feature tests)
+-   **Version Control:** Git
+
+---
+
+## ⚙️ Installation
+
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/yourusername/hms.git
+    cd hms
+    ```
+
+## Environment Setup
+
+cp .env.example .env
+php artisan key:generate
+
+## Run Migrations
+
+php artisan migrate --seed
+
+## Serve the Application
+
+php artisan serve
+
+## Access the Application
+
+Visit http://127.0.0.1:8000 in your browser.
+
+## 🧪 Running Tests
+
+-   Run Unit & Feature tests using:
+    php artisan test
+    or
+    vendor/bin/phpunit
+
+## Default Roles & Access
+
+Role Description
+Admin Full access to all modules.
+Doctor Manage appointments, patients, prescriptions.
+Nurse View patients, prescriptions, assist doctors.
+Receptionist Handle appointments and patient registrations.
+Lab Staff Manage lab tests and results.
+Pharmacist Manage prescriptions and pharmacy inventory.
+Accountant Manage billing, invoicing, and accounting.
+Patient View own records and appointments.
+Staff General internal staff access.
+
+## Key Highlights
+
+Modular and scalable architecture.
+
+Dynamic settings to turn features on/off for roles (Admin control).
+
+Clean UI with responsive design.
+
+Secure with CSRF, XSS, and SQL injection protection.
+
+Supports real-world hospital workflows.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License.
+
+## Author
+
+Smart Aghadueki
+
+GitHub: [github.com/smartadukis](https://github.com/smartadukis/hms)
