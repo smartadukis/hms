@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
-use App\Models\Patient;    // <— Import Patient
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+/**
+ * Class InvoiceController
+ *
+ * Handles CRUD operations for invoices and their items,
+ * as well as filtering and searching invoices.
+ */
 class InvoiceController extends Controller
 {
     /**
-     * Display a listing of invoices, with search & filters.
+     * Display a listing of invoices, with optional search and filters.
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -25,12 +34,12 @@ class InvoiceController extends Controller
             );
         }
 
-        // Filter by status
+        // Filter by invoice status (unpaid, paid, partial)
         if ($status = $request->status) {
             $query->where('status', $status);
         }
 
-        // Filter by issuer
+        // Filter by issuer (staff ID)
         if ($issuedBy = $request->issued_by) {
             $query->where('issued_by', $issuedBy);
         }
@@ -45,16 +54,21 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Show form for creating new invoice.
+     * Show form for creating a new invoice.
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        $patients = Patient::orderBy('name')->get(); // <-- use Patient
+        $patients = Patient::orderBy('name')->get();
         return view('invoices.create', compact('patients'));
     }
 
     /**
-     * Store new invoice.
+     * Store a newly created invoice in the database.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -65,6 +79,7 @@ class InvoiceController extends Controller
             'items.*.item_type'     => 'nullable|string',
         ]);
 
+        // Calculate invoice total from items
         $total = collect($request->items)->sum('amount');
 
         $invoice = Invoice::create([
@@ -73,6 +88,7 @@ class InvoiceController extends Controller
             'issued_by'    => auth()->id(),
         ]);
 
+        // Store each invoice item
         foreach ($request->items as $item) {
             InvoiceItem::create([
                 'invoice_id'  => $invoice->id,
@@ -87,7 +103,10 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Display a single invoice.
+     * Display a single invoice with its details.
+     *
+     * @param Invoice $invoice
+     * @return \Illuminate\View\View
      */
     public function show(Invoice $invoice)
     {
@@ -96,17 +115,24 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Show edit form for invoice.
+     * Show the form for editing an existing invoice.
+     *
+     * @param Invoice $invoice
+     * @return \Illuminate\View\View
      */
     public function edit(Invoice $invoice)
     {
         $invoice->load('items');
-        $patients = Patient::orderBy('name')->get(); // <-- use Patient
+        $patients = Patient::orderBy('name')->get();
         return view('invoices.edit', compact('invoice','patients'));
     }
 
     /**
-     * Update invoice & its items.
+     * Update an existing invoice and its items.
+     *
+     * @param Request $request
+     * @param Invoice $invoice
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Invoice $invoice)
     {
@@ -128,6 +154,7 @@ class InvoiceController extends Controller
             'total_amount'  => $total,
         ]);
 
+        // Replace existing items with new set
         $invoice->items()->delete();
         foreach ($request->items as $item) {
             InvoiceItem::create([
@@ -143,7 +170,10 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Delete an invoice.
+     * Delete an invoice from the database.
+     *
+     * @param Invoice $invoice
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Invoice $invoice)
     {

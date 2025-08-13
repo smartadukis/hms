@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/PrescriptionController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;

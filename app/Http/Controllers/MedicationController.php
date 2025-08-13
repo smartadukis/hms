@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/MedicationController.php
 
 namespace App\Http\Controllers;
 
@@ -9,13 +10,16 @@ use Illuminate\Support\Facades\Auth;
 class MedicationController extends Controller
 {
     /**
-     * Display a listing of the resource, with search & category filter.
+     * Display a listing of the medications with optional search and category filters.
+     *
+     * @param Request $request The HTTP request containing optional 'search' and 'category' parameters.
+     * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
         $query = Medication::query();
 
-        // Search by name, generic_name, or barcode/ndc
+        // Search by name, generic name, or barcode/NDC
         if ($search = $request->input('search')) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -29,10 +33,12 @@ class MedicationController extends Controller
             $query->where('category', $category);
         }
 
+        // Paginate results and keep query parameters for filters
         $medications = $query->orderBy('name')
                              ->paginate(10)
                              ->appends($request->only(['search','category']));
 
+        // Get list of all categories for the filter dropdown
         $categories = Medication::select('category')
                          ->distinct()
                          ->orderBy('category')
@@ -42,7 +48,9 @@ class MedicationController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new medication.
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -54,7 +62,10 @@ class MedicationController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created medication in the database.
+     *
+     * @param Request $request The HTTP request containing medication details.
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -76,6 +87,7 @@ class MedicationController extends Controller
             'storage_conditions'    => 'nullable|string',
         ]);
 
+        // Create new medication and attach the current logged-in user as the creator
         Medication::create(array_merge(
             $request->only([
                 'name','generic_name','strength','unit_of_strength',
@@ -91,7 +103,10 @@ class MedicationController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing an existing medication.
+     *
+     * @param Medication $medication The medication instance to edit.
+     * @return \Illuminate\View\View
      */
     public function edit(Medication $medication)
     {
@@ -103,7 +118,11 @@ class MedicationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an existing medication in the database.
+     *
+     * @param Request $request The HTTP request containing updated medication details.
+     * @param Medication $medication The medication instance being updated.
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Medication $medication)
     {
@@ -125,6 +144,7 @@ class MedicationController extends Controller
             'storage_conditions'    => 'nullable|string',
         ]);
 
+        // Update medication record
         $medication->update($request->only([
             'name','generic_name','strength','unit_of_strength',
             'category','dispensing_unit','pack_size','quantity','reorder_level','manufacturer',
@@ -137,7 +157,10 @@ class MedicationController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove a medication from the database.
+     *
+     * @param Medication $medication The medication instance to delete.
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Medication $medication)
     {
@@ -147,6 +170,9 @@ class MedicationController extends Controller
 
     /**
      * Show the restock form for a specific medication.
+     *
+     * @param Medication $medication The medication instance to restock.
+     * @return \Illuminate\View\View
      */
     public function restockForm(Medication $medication)
     {
@@ -154,12 +180,19 @@ class MedicationController extends Controller
     }
 
     /**
-     * Process a stock increment for a medication.
+     * Increase the stock quantity of a medication.
+     *
+     * @param Request $request The HTTP request containing the 'quantity' to add.
+     * @param Medication $medication The medication instance to restock.
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function restock(Request $request, Medication $medication)
     {
         $request->validate(['quantity' => 'required|integer|min:1']);
+
+        // Increment the medication stock
         $medication->increment('quantity', $request->quantity);
+
         return redirect()->route('medications.index')->with('success', 'Stock updated.');
     }
 }
