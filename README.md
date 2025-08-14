@@ -21,7 +21,7 @@ The system is modular and role-based, ensuring only authorized users can access 
     -   **Pharmacist**
     -   **Accountant**
     -   **Patient**
-    -   **Staff** (optional/general users)
+    -   **Staff** (Default users)
 -   Password hashing & Laravel’s built-in CSRF protection.
 
 ---
@@ -32,7 +32,6 @@ The system is modular and role-based, ensuring only authorized users can access 
 
 -   Dynamic dashboard for each role.
 -   Quick statistics (patients count, appointments today, pending lab tests, invoices, etc.).
--   Graphs/charts for visual analytics.
 
 ---
 
@@ -199,7 +198,7 @@ Unit/           \# Unit tests for controllers & logic
 
 1.  **Clone the Repository**
     ```bash
-    git clone [https://github.com/yourusername/hms.git](https://github.com/yourusername/hms.git)
+    git clone [https://github.com/smartadukis/hms.git](https://github.com/smartadukis/hms.git)
     cd hms
     ```
 
