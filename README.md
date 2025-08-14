@@ -198,7 +198,7 @@ Unit/           \# Unit tests for controllers & logic
 
 1.  **Clone the Repository**
     ```bash
-    git clone [https://github.com/smartadukis/hms.git](https://github.com/smartadukis/hms.git)
+    git clone https://github.com/smartadukis/hms.git
     cd hms
     ```
 
