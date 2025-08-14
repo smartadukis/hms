@@ -147,6 +147,8 @@ The system is modular and role-based, ensuring only authorized users can access 
 
 ## 🗂️ Project Structure
 
+```
+
 app/
 Http/
 Controllers/
@@ -167,17 +169,18 @@ TransactionController.php
 Admin/
 UserController.php
 resources/
-views/ # Blade templates for UI
-css/ # Custom styles
-js/ # Vanilla JavaScript scripts
+views/          \# Blade templates for UI
+css/            \# Custom styles
+js/             \# Vanilla JavaScript scripts
 public/
 css/
 js/
 database/
-migrations/ # Laravel migration files
+migrations/     \# Laravel migration files
 tests/
-Unit/ # Unit tests for controllers & logic
-Feature/ # Feature tests for application routes
+Unit/           \# Unit tests for controllers & logic
+
+```
 
 ---
 
@@ -187,74 +190,95 @@ Feature/ # Feature tests for application routes
 -   **Frontend:** Blade, Bootstrap 5, Custom CSS, Vanilla JS
 -   **Database:** MySQL
 -   **Authentication:** Laravel Auth with role-based access
--   **Testing:** PHPUnit (Unit & Feature tests)
+-   **Testing:** PHPUnit (Unit tests)
 -   **Version Control:** Git
 
 ---
 
 ## ⚙️ Installation
 
-1. **Clone the Repository**
+1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/yourusername/hms.git
+    git clone [https://github.com/yourusername/hms.git](https://github.com/yourusername/hms.git)
     cd hms
     ```
 
-## Environment Setup
+### Environment Setup
 
+```bash
 cp .env.example .env
 php artisan key:generate
+```
 
-## Run Migrations
+### Run Migrations
 
+```bash
 php artisan migrate --seed
+```
 
-## Serve the Application
+### Serve the Application
 
+```bash
 php artisan serve
+```
 
-## Access the Application
+### Access the Application
 
-Visit http://127.0.0.1:8000 in your browser.
+Visit `http://127.0.0.1:8000` in your browser.
+
+---
 
 ## 🧪 Running Tests
 
 -   Run Unit & Feature tests using:
+    ```bash
     php artisan test
+    ```
     or
+    ```bash
     vendor/bin/phpunit
+    ```
+
+---
 
 ## Default Roles & Access
 
-Role Description
-Admin Full access to all modules.
-Doctor Manage appointments, patients, prescriptions.
-Nurse View patients, prescriptions, assist doctors.
-Receptionist Handle appointments and patient registrations.
-Lab Staff Manage lab tests and results.
-Pharmacist Manage prescriptions and pharmacy inventory.
-Accountant Manage billing, invoicing, and accounting.
-Patient View own records and appointments.
-Staff General internal staff access.
+| Role             | Description                                    |
+| :--------------- | :--------------------------------------------- |
+| **Admin**        | Full access to all modules.                    |
+| **Doctor**       | Manage appointments, patients, prescriptions.  |
+| **Nurse**        | View patients, prescriptions, assist doctors.  |
+| **Receptionist** | Handle appointments and patient registrations. |
+| **Lab Staff**    | Manage lab tests and results.                  |
+| **Pharmacist**   | Manage prescriptions and pharmacy inventory.   |
+| **Accountant**   | Manage billing, invoicing, and accounting.     |
+| **Patient**      | View own records and appointments.             |
+| **Staff**        | General internal staff access.                 |
+
+---
 
 ## Key Highlights
 
-Modular and scalable architecture.
+-   Modular and scalable architecture.
+-   Dynamic settings to turn features on/off for roles (Admin control).
+-   Clean UI with responsive design.
+-   Secure with CSRF, XSS, and SQL injection protection.
+-   Supports real-world hospital workflows.
 
-Dynamic settings to turn features on/off for roles (Admin control).
-
-Clean UI with responsive design.
-
-Secure with CSRF, XSS, and SQL injection protection.
-
-Supports real-world hospital workflows.
+---
 
 ## License
 
 This project is licensed under the MIT License.
+
+---
 
 ## Author
 
 Smart Aghadueki
 
 GitHub: [github.com/smartadukis](https://github.com/smartadukis/hms)
+
+```
+
+```
